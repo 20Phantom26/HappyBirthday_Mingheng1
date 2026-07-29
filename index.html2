@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>銘亨生日快樂！</title>
+  <title>藍藍生日快樂！</title>
   <style>
     /* 全局樣式 */
     * {
@@ -219,7 +219,7 @@
 
     <!-- 階段 4：藏頭藏尾詩與落款 -->
     <div id="step4" class="step">
-      <h2>㊗️ 銘亨破蛋日快樂！</h2>
+      <h2>㊗️ 藍藍破蛋日快樂！</h2>
       <div class="acrostic-box">
         <div class="acrostic">
           <span>生</span> 日 快 樂 <span>生</span><br>
@@ -351,7 +351,7 @@
       document.getElementById('cake-area').style.display = 'flex';
       const status = document.getElementById('cake-status');
       
-      status.innerText = "正在為銘亨堆疊蛋糕中...";
+      status.innerText = "正在為藍藍堆疊蛋糕中...";
 
       setTimeout(() => {
         document.getElementById('layer1').style.width = '200px';
@@ -383,3 +383,4 @@
   </script>
 </body>
 </html>
+
