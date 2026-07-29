@@ -1,1 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>銘亨生日快樂！</title>
+  <style>
+    /* 全局樣式 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #000814;
+      color: #ffffff;
+      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+    }
 
+    /* 背景星空與流星 */
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* 容器 */
+    .container {
+      position: relative;
+      z-index: 2;
+      background: rgba(10, 25, 47, 0.85);
+      border: 1px solid rgba(0, 180, 216, 0.3);
+      backdrop-filter: blur(8px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 180, 216, 0.4);
+      text-align: center;
+      max-width: 90%;
+      width: 450px;
+    }
+
+    h1, h2 {
+      margin-bottom: 15px;
+      color: #90e0ef;
+      text-shadow: 0 0 10px #00b4d8;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+
+    /* 按鈕樣式 */
+    .btn {
+      background: linear-gradient(45deg, #0077b6, #00b4d8);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
+      transition: all 0.3s ease;
+      margin: 5px;
+    }
+    .btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 180, 216, 0.6);
+    }
+    .btn-secondary {
+      background: linear-gradient(45deg, #6c757d, #495057);
+    }
+
+    /* 輸入框 */
+    input[type="text"] {
+      padding: 10px 15px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid #00b4d8;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      text-align: center;
+      outline: none;
+      margin-bottom: 15px;
+      width: 80%;
+    }
+
+    /* 隱藏區塊 */
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 蛋糕製作動畫區 */
+    .cake-container {
+      margin: 20px auto;
+      height: 200px;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+    }
+    .cake-layer {
+      width: 0;
+      height: 40px;
+      border-radius: 10px;
+      margin-top: 5px;
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .layer-1 { background: #ff70a6; } /* 底層 */
+    .layer-2 { background: #ff9770; } /* 中層 */
+    .layer-3 { background: #ffd670; } /* 頂層 */
+    .candle {
+      font-size: 30px;
+      display: none;
+      animation: bounce 1s infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-5px); }
+    }
+
+    /* 藏頭詩專用文字樣式 */
+    .acrostic {
+      text-align: left;
+      display: inline-block;
+      line-height: 2;
+      font-size: 1.2rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 4px solid #00b4d8;
+    }
+    .acrostic span {
+      color: #4cc9f0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 藍色流星雨與星空背景 Canvas -->
+  <canvas id="canvas"></canvas>
+
+  <!-- 背景音樂（播放生日快樂歌） -->
+  <audio id="bgm" loop preload="auto">
+    <!-- 使用開放授權的生日音樂，也可替換為自己的 mp3 連結 -->
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73180.mp3?filename=happy-birthday-155461.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+
+    <!-- 階段 1：點擊解鎖與倒計時 -->
+    <div id="step1" class="step active">
+      <h1>🎁 神秘生日驚喜</h1>
+      <p id="countdown-display">倒數計時：3 秒</p>
+      <button class="btn" id="start-btn" onclick="startCountdown()">點擊解鎖倒計時 ✨</button>
+    </div>
+
+    <!-- 階段 2：祝福語與對話框 -->
+    <div id="step2" class="step">
+      <h2>㊗️ 壽星生日快樂！</h2>
+      <p>請在下方對話框輸入「<b>好的</b>」以繼續：</p>
+      <input type="text" id="input-reply" placeholder="請輸入：好的">
+      <br>
+      <button class="btn" onclick="checkReply()">確認提交</button>
+    </div>
+
+    <!-- 階段 3：心情選擇與製作蛋糕 -->
+    <div id="step3" class="step">
+      <h2>今天心情怎麼樣呢？</h2>
+      <button class="btn" onclick="selectHappy(true)">開心 😊</button>
+      <button class="btn btn-secondary" onclick="selectHappy(false)">不開心 😢</button>
+
+      <div class="cake-container" id="cake-area" style="display: none;">
+        <div id="candle" class="candle">🕯️✨</div>
+        <div id="layer3" class="cake-layer layer-3">🍓 水果夾層</div>
+        <div id="layer2" class="cake-layer layer-2">🍫 巧克力奶油</div>
+        <div id="layer1" class="cake-layer layer-1">🎂 鬆軟蛋糕底</div>
+      </div>
+      <p id="cake-status" style="margin-top: 10px;"></p>
+    </div>
+
+    <!-- 階段 4：最終藏頭藏尾詩與落款 -->
+    <div id="step4" class="step">
+      <h2>㊗️ 銘亨破蛋日快樂！</h2>
+      <div class="acrostic">
+        <span>生</span> 日 快 樂 <span>生</span><br>
+        <span>日</span> 快 樂 生 <span>日</span><br>
+        <span>快</span> 樂 生 日 <span>快</span><br>
+        <span>樂</span> 生 日 快 <span>樂</span>
+      </div>
+      <p style="margin-top: 15px; font-weight: bold; color: #90e0ef;">藏頭又藏尾，完美 ✨</p>
+      <hr style="border-color: rgba(0,180,216,0.3); margin: 15px 0;">
+      <p style="font-size: 0.9rem; color: #a8dede;">20260731 By Laura</p>
+    </div>
+
+  </div>
+
+  <script>
+    /* --- 1. 背景：藍色流星雨 + 閃爍星光特效 --- */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    // 閃爍星星
+    const stars = Array.from({ length: 150 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 2,
+      alpha: Math.random(),
+      speed: Math.random() * 0.02 + 0.005
+    }));
+
+    // 藍色流星
+    const meteors = Array.from({ length: 6 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height * 0.5,
+      len: Math.random() * 80 + 50,
+      speed: Math.random() * 4 + 6,
+      size: Math.random() * 1.5 + 1
+    }));
+
+    function drawStarsAndMeteors() {
+      ctx.clearRect(0, 0, width, height);
+
+      // 畫星星
+      stars.forEach(star => {
+        star.alpha += star.speed;
+        if (star.alpha > 1 || star.alpha < 0) star.speed = -star.speed;
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 畫藍色流星
+      meteors.forEach(m => {
+        m.x -= m.speed;
+        m.y += m.speed;
+
+        if (m.x < -100 || m.y > height + 100) {
+          m.x = Math.random() * width + 200;
+          m.y = -50;
+        }
+
+        const gradient = ctx.createLinearGradient(m.x, m.y, m.x + m.len, m.y - m.len);
+        gradient.addColorStop(0, 'rgba(0, 212, 255, 1)');
+        gradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = m.size;
+        ctx.beginPath();
+        ctx.moveTo(m.x, m.y);
+        ctx.lineTo(m.x + m.len, m.y - m.len);
+        ctx.stroke();
+      });
+
+      requestAnimationFrame(drawStarsAndMeteors);
+    }
+    drawStarsAndMeteors();
+
+
+    /* --- 2. 階段邏輯與互動事件 --- */
+
+    // 階段 1：倒計時邏輯
+    function startCountdown() {
+      const audio = document.getElementById('bgm');
+      audio.play().catch(() => { console.log('Autoplay prevented'); });
+
+      const btn = document.getElementById('start-btn');
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+
+      let count = 3;
+      const display = document.getElementById('countdown-display');
+
+      const timer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          display.innerText = `倒數計時：${count} 秒`;
+        } else {
+          clearInterval(timer);
+          // 進入階段 2
+          goToStep('step1', 'step2');
+        }
+      }, 1000);
+    }
+
+    // 階段 2：對話框驗證
+    function checkReply() {
+      const val = document.getElementById('input-reply').value.trim();
+      if (val === "好的") {
+        goToStep('step2', 'step3');
+      } else {
+        alert("請輸入「好的」才可以繼續唷！");
+      }
+    }
+
+    // 階段 3：選擇開心與製作蛋糕
+    function selectHappy(isHappy) {
+      if (!isHappy) {
+        alert("不能不開心😂");
+        return;
+      }
+
+      // 顯示蛋糕區塊並開始動畫
+      document.getElementById('cake-area').style.display = 'flex';
+      const status = document.getElementById('cake-status');
+      
+      status.innerText = "正在為銘亨堆疊蛋糕中...";
+
+      setTimeout(() => {
+        document.getElementById('layer1').style.width = '200px';
+      }, 300);
+
+      setTimeout(() => {
+        document.getElementById('layer2').style.width = '150px';
+      }, 1000);
+
+      setTimeout(() => {
+        document.getElementById('layer3').style.width = '100px';
+      }, 1700);
+
+      setTimeout(() => {
+        document.getElementById('candle').style.display = 'block';
+        status.innerText = "蛋糕製作完成！🎂✨";
+      }, 2400);
+
+      // 蛋糕完成後自動跳轉至階段 4
+      setTimeout(() => {
+        goToStep('step3', 'step4');
+      }, 4000);
+    }
+
+    // 切換顯示步驟
+    function goToStep(currentId, nextId) {
+      document.getElementById(currentId).classList.remove('active');
+      document.getElementById(nextId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
