@@ -147,19 +147,30 @@
     }
 
     /* 藏頭詩專用文字樣式 */
-    .acrostic {
-      text-align: left;
-      display: inline-block;
-      line-height: 2;
-      font-size: 1.2rem;
+    .acrostic-box {
       background: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      border-radius: 10px;
+      padding: 20px;
+      border-radius: 12px;
       border-left: 4px solid #00b4d8;
+      margin: 15px 0;
+    }
+    .acrostic {
+      text-align: center;
+      line-height: 2;
+      font-size: 1.25rem;
+      letter-spacing: 2px;
     }
     .acrostic span {
       color: #4cc9f0;
       font-weight: bold;
+    }
+    .signature {
+      text-align: right;
+      margin-top: 15px;
+      font-size: 0.95rem;
+      color: #90e0ef;
+      font-weight: 500;
+      letter-spacing: 1px;
     }
   </style>
 </head>
@@ -170,7 +181,6 @@
 
   <!-- 背景音樂（播放生日快樂歌） -->
   <audio id="bgm" loop preload="auto">
-    <!-- 使用開放授權的生日音樂，也可替換為自己的 mp3 連結 -->
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73180.mp3?filename=happy-birthday-155461.mp3" type="audio/mpeg">
   </audio>
 
@@ -207,18 +217,20 @@
       <p id="cake-status" style="margin-top: 10px;"></p>
     </div>
 
-    <!-- 階段 4：最終藏頭藏尾詩與落款 -->
+    <!-- 階段 4：藏頭藏尾詩與落款 -->
     <div id="step4" class="step">
       <h2>㊗️ 銘亨破蛋日快樂！</h2>
-      <div class="acrostic">
-        <span>生</span> 日 快 樂 <span>生</span><br>
-        <span>日</span> 快 樂 生 <span>日</span><br>
-        <span>快</span> 樂 生 日 <span>快</span><br>
-        <span>樂</span> 生 日 快 <span>樂</span>
+      <div class="acrostic-box">
+        <div class="acrostic">
+          <span>生</span> 日 快 樂 <span>生</span><br>
+          <span>日</span> 快 樂 生 <span>日</span><br>
+          <span>快</span> 樂 生 日 <span>快</span><br>
+          <span>樂</span> 生 日 快 <span>樂</span>
+        </div>
+        <p style="margin-top: 10px; font-weight: bold; color: #4cc9f0;">藏頭又藏尾，完美 ✨</p>
+        <!-- 藏頭詩緊接著的落款 -->
+        <div class="signature">20260731 By Laura</div>
       </div>
-      <p style="margin-top: 15px; font-weight: bold; color: #90e0ef;">藏頭又藏尾，完美 ✨</p>
-      <hr style="border-color: rgba(0,180,216,0.3); margin: 15px 0;">
-      <p style="font-size: 0.9rem; color: #a8dede;">20260731 By Laura</p>
     </div>
 
   </div>
@@ -314,7 +326,6 @@
           display.innerText = `倒數計時：${count} 秒`;
         } else {
           clearInterval(timer);
-          // 進入階段 2
           goToStep('step1', 'step2');
         }
       }, 1000);
@@ -337,7 +348,6 @@
         return;
       }
 
-      // 顯示蛋糕區塊並開始動畫
       document.getElementById('cake-area').style.display = 'flex';
       const status = document.getElementById('cake-status');
       
@@ -360,7 +370,6 @@
         status.innerText = "蛋糕製作完成！🎂✨";
       }, 2400);
 
-      // 蛋糕完成後自動跳轉至階段 4
       setTimeout(() => {
         goToStep('step3', 'step4');
       }, 4000);
