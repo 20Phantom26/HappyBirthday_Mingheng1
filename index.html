@@ -1,449 +1,522 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>生日快樂！銘亨</title>
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    overflow:hidden;
-    height:100vh;
-    background:
-    radial-gradient(circle at top,#263b73,#080b22 70%);
-    font-family:"Microsoft JhengHei",sans-serif;
-    color:white;
-}
-
-
-/* 星空 */
-
-.star{
-    position:absolute;
-    width:3px;
-    height:3px;
-    background:white;
-    border-radius:50%;
-    animation:twinkle 2s infinite alternate;
-}
-
-@keyframes twinkle{
-    from{
-        opacity:.2;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎁 藍藍生日快樂！</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
     }
-    to{
-        opacity:1;
+
+    body {
+      background: linear-gradient(135deg, #090a0f 0%, #171b34 50%, #0d122b 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
     }
-}
 
-
-/* 流星 */
-
-.shooting{
-    position:absolute;
-    width:120px;
-    height:2px;
-    background:
-    linear-gradient(90deg,white,transparent);
-    transform:rotate(-35deg);
-    animation:shoot 5s linear infinite;
-}
-
-@keyframes shoot{
-
-0%{
-    left:100%;
-    top:20%;
-    opacity:0;
-}
-
-20%{
-    opacity:1;
-}
-
-100%{
-    left:-20%;
-    top:80%;
-    opacity:0;
-}
-
-}
-
-
-/* 主內容 */
-
-.container{
-
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-
-text-align:center;
-
-}
-
-
-/* 標題 */
-
-h1{
-
-font-size:55px;
-letter-spacing:8px;
-
-text-shadow:
-0 0 10px #fff,
-0 0 25px gold;
-
-animation:fade 3s;
-
-}
-
-
-.name{
-
-font-size:45px;
-margin-top:20px;
-
-color:#ffe9a8;
-
-}
-
-
-/* 文字 */
-
-.poem{
-
-margin-top:45px;
-
-font-size:28px;
-
-line-height:2;
-
-letter-spacing:5px;
-
-opacity:0;
-
-animation:
-showText 5s forwards;
-
-animation-delay:3s;
-
-}
-
-
-@keyframes showText{
-
-from{
-opacity:0;
-transform:translateY(40px);
-}
-
-to{
-opacity:1;
-transform:none;
-}
-
-}
-
-
-@keyframes fade{
-
-from{
-opacity:0;
-transform:scale(.7);
-}
-
-to{
-opacity:1;
-transform:scale(1);
-}
-
-}
-
-
-
-/* 金色粒子 */
-
-.particle{
-
-position:absolute;
-
-width:6px;
-height:6px;
-
-background:#ffd86b;
-
-border-radius:50%;
-
-animation:
-float 8s linear infinite;
-
-}
-
-
-@keyframes float{
-
-0%{
-
-transform:
-translateY(100vh);
-
-opacity:0;
-
-}
-
-50%{
-
-opacity:1;
-
-}
-
-100%{
-
-transform:
-translateY(-20vh);
-
-opacity:0;
-
-}
-
-}
-
-
-/* 煙火 */
-
-.firework{
-
-position:absolute;
-
-width:8px;
-height:8px;
-
-background:gold;
-
-border-radius:50%;
-
-animation:
-explode 2s infinite;
-
-}
-
-
-@keyframes explode{
-
-0%{
-
-transform:scale(1);
-
-opacity:1;
-
-}
-
-
-100%{
-
-transform:
-scale(20);
-
-opacity:0;
-
-}
-
-}
-
-
-
-/* 結尾 */
-
-.end{
-
-position:absolute;
-
-bottom:50px;
-
-width:100%;
-
-text-align:center;
-
-font-size:35px;
-
-opacity:0;
-
-animation:
-ending 5s forwards;
-
-animation-delay:12s;
-
-text-shadow:
-0 0 15px gold;
-
-}
-
-
-@keyframes ending{
-
-to{
-opacity:1;
-}
-
-}
-
-
-</style>
-
+    /* 背景 Canvas */
+    #stars-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      margin: 20px 0;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2 {
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(147, 112, 219, 0.8);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #7b2cbf, #3a0ca3);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(123, 44, 191, 0.4);
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(123, 44, 191, 0.6);
+    }
+
+    .timer-box {
+      font-size: 1.3rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 12px;
+      margin: 20px 0;
+      color: #a2d2ff;
+      letter-spacing: 1px;
+    }
+
+    input[type="text"] {
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid #7b2cbf;
+      outline: none;
+      font-size: 1rem;
+      margin-right: 10px;
+      text-align: center;
+    }
+
+    /* 蛋糕堆疊容器 */
+    .cake-container {
+      height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      margin: 20px 0;
+    }
+
+    .cake-layer {
+      width: 0;
+      height: 0;
+      border-radius: 10px;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      margin-bottom: 4px;
+      opacity: 0;
+    }
+
+    .cake-bottom { background: #ffafcc; }
+    .cake-middle { background: #bde0fe; }
+    .cake-top { background: #fffffc; }
+
+    .candle {
+      width: 12px;
+      height: 35px;
+      background: repeating-linear-gradient(45deg, #ff4d6d, #ff4d6d 5px, #fff 5px, #fff 10px);
+      position: relative;
+      opacity: 0;
+      margin-bottom: 4px;
+      transition: opacity 0.5s ease;
+    }
+
+    .flame {
+      width: 14px;
+      height: 18px;
+      background: #ffb703;
+      border-radius: 50% 50% 20% 20%;
+      position: absolute;
+      top: -18px;
+      left: -1px;
+      box-shadow: 0 0 10px #ffb703;
+      animation: burn 0.5s infinite alternate;
+    }
+
+    @keyframes burn {
+      from { transform: scale(0.9); }
+      to { transform: scale(1.1); }
+    }
+
+    /* 藏頭詩動態特效 */
+    .poem-line {
+      font-size: 1.3rem;
+      margin: 14px 0;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.8s ease;
+      letter-spacing: 2px;
+    }
+
+    .poem-line.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .highlight-acrostic {
+      color: #ffd700;
+      font-weight: bold;
+      font-size: 1.6rem;
+      text-shadow: 0 0 12px #ffd700;
+      display: inline-block;
+      transform: scale(1.25);
+      transition: all 0.5s ease;
+    }
+
+    .color-blue { color: #4cc9f0; font-weight: bold; }
+    .color-purple { color: #c77dff; }
+    .color-gold { color: #ffd700; text-shadow: 0 0 8px #ffd700; }
+  </style>
 </head>
-
-
 <body>
 
-
-<div class="container">
-
-<h1>
-🎂 生日快樂！
-</h1>
-
-<div class="name">
-銘亨
-</div>
-
-
-<div class="poem">
-
-生性高雅顯風範，<br>
-
-日子愜意體康健。<br>
-
-快意人生知音伴，<br>
-
-樂娛生日盡開顏。
-
-</div>
-
-</div>
-
-
-<div class="end">
-
-20260724<br>
-
-By Laura
-
-</div>
-
-
-
-<script>
-
-
-// 建立星空
-
-for(let i=0;i<120;i++){
-
-let star=document.createElement("div");
-
-star.className="star";
-
-star.style.left=Math.random()*100+"%";
-
-star.style.top=Math.random()*100+"%";
-
-star.style.animationDelay=
-Math.random()*3+"s";
-
-document.body.appendChild(star);
-
-}
-
-
-
-// 流星
-
-setInterval(()=>{
-
-let meteor=document.createElement("div");
-
-meteor.className="shooting";
-
-meteor.style.top=
-Math.random()*50+"%";
-
-document.body.appendChild(meteor);
-
-
-setTimeout(()=>{
-
-meteor.remove();
-
-},5000);
-
-
-},4000);
-
-
-
-// 金色粒子
-
-for(let i=0;i<40;i++){
-
-let p=document.createElement("div");
-
-p.className="particle";
-
-p.style.left=
-Math.random()*100+"%";
-
-p.style.animationDelay=
-Math.random()*8+"s";
-
-
-document.body.appendChild(p);
-
-}
-
-
-
-// 簡易煙火
-
-setInterval(()=>{
-
-
-let f=document.createElement("div");
-
-f.className="firework";
-
-f.style.left=
-Math.random()*100+"%";
-
-f.style.top=
-Math.random()*70+"%";
-
-
-document.body.appendChild(f);
-
-
-setTimeout(()=>{
-
-f.remove();
-
-},2000);
-
-
-},2500);
-
-
-
-</script>
-
-
+  <!-- 音樂標籤 -->
+  <audio id="audioPanther" src="The Pink Panther Theme (Full).mp3" loop></audio>
+  <audio id="audioHaidilao" src="海底撈生日快樂歌.mp3" loop></audio>
+
+  <!-- 星空與流星雨背景 -->
+  <canvas id="stars-canvas"></canvas>
+
+  <div class="container">
+    
+    <!-- 0. 啟動頁面 (解決瀏覽器自動播放限制) -->
+    <div id="step-start" class="section active">
+      <h2>🎉 銘亨專屬生日驚喜 🎉</h2>
+      <p style="color: #b8c0ff; margin: 20px 0; font-size: 1.1rem; line-height: 1.6;">
+        點擊下方按鈕啟動音樂與驚喜體驗 🎵
+      </p>
+      <button class="btn" style="font-size: 1.3rem; padding: 15px 35px;" onclick="startExperience()">✨ 開啟銘亨的生日禮物 ✨</button>
+    </div>
+
+    <!-- 1 & 2. 倒計時畫面 -->
+    <div id="step1" class="section">
+      <h2>🎁 神秘生日祝福準備中</h2>
+      <p style="color: #b8c0ff;">等待銘亨的生日驚喜⌛️</p>
+      
+      <div class="timer-box">
+        距離 2026/07/24 00:00 還有：<br>
+        <span id="countdown" style="font-size: 1.5rem; font-weight: bold; color: #fff;">計算中...</span>
+      </div>
+
+      <button class="btn" onclick="unlockCountdown()">🔓 點擊解鎖倒計時</button>
+    </div>
+
+    <!-- 3. 解鎖倒計時 -->
+    <div id="step-unlock" class="section">
+      <h2>正在為您解鎖🔓</h2>
+      <p style="font-size: 2rem; margin: 30px 0; color: #ffd700;" id="unlock-timer">倒計時 3 秒</p>
+    </div>
+
+    <!-- 4. 海底撈音樂與輸入驗證 -->
+    <div id="step2" class="section">
+      <h2 class="color-purple">🎂 祝壽星生日快肉！🎊</h2>
+      <p style="margin-bottom: 20px; font-size: 1rem; color: #a2d2ff;">🎵 音樂播放中...</p>
+
+      <div style="margin: 25px 0;">
+        <p style="margin-bottom: 12px;">請輸入「好的」並點選確認提交：</p>
+        <input type="text" id="userInput" placeholder="請輸入：好的">
+        <button class="btn" style="padding: 9px 20px; margin-top:0;" onclick="submitConfirm()">確認提交</button>
+      </div>
+    </div>
+
+    <!-- 5. 心情選擇 -->
+    <div id="step3" class="section">
+      <h2>今天心情怎麼樣呢？</h2>
+      <div style="margin-top: 25px;">
+        <button class="btn" style="background: #4895ef; margin-right: 15px;" onclick="handleMood('happy')">開心 😃</button>
+        <button class="btn" style="background: #7209b7;" onclick="handleMood('sad')">不開心 🥺</button>
+      </div>
+
+      <!-- 蛋糕區域 -->
+      <div id="cake-area" class="cake-container" style="display: none;">
+        <div id="candle" class="candle"><div class="flame"></div></div>
+        <div id="cake3" class="cake-layer cake-top"></div>
+        <div id="cake2" class="cake-layer cake-middle"></div>
+        <div id="cake1" class="cake-layer cake-bottom"></div>
+      </div>
+
+      <!-- 不開心：祝福語 -->
+      <div id="sad-message" style="display: none; margin-top: 25px;">
+        <p class="color-blue" style="font-size: 1.3rem; margin-bottom: 12px;">壽星笑開懷好運天天來</p>
+        <p class="color-gold" style="font-size: 1.1rem; line-height: 1.8;">
+          🌈對所有的煩惱說Bye~Bye👋🏻<br>對所有的快樂說 Hi~Hi ✋🏻
+        </p>
+        <button class="btn" onclick="goToPoem()">收下好運並繼續 🍀✨</button>
+      </div>
+    </div>
+
+    <!-- 6. 第一首藏頭詩 -->
+    <div id="step-poem1" class="section">
+      <h2>㊗️ <span class="color-gold">銘亨</span> 生日快肉！</h2>
+      
+      <div id="poem1-box" style="margin: 30px 0;">
+        <div class="poem-line" id="p1-1"><span class="char1">生</span>性高雅顯風範，</div>
+        <div class="poem-line" id="p1-2"><span class="char2">日</span>子愜意體康健。</div>
+        <div class="poem-line" id="p1-3"><span class="char3">快</span>意人生知音伴，</div>
+        <div class="poem-line" id="p1-4"><span class="char4">樂</span>娛生日盡開顏。</div>
+      </div>
+
+      <button id="p1-next-btn" class="btn" style="display: none;" onclick="goToPoem2()">進入下一個祝福轉場 💫</button>
+    </div>
+
+    <!-- 6. 第二首藏頭藏尾詩 -->
+    <div id="step-poem2" class="section">
+      <h2>💫 完美的祝福 💫</h2>
+      
+      <div id="poem2-box" style="margin: 30px 0;">
+        <div class="poem-line" id="p2-1"><span class="head-char">生</span>日快樂<span class="tail-char">生</span></div>
+        <div class="poem-line" id="p2-2"><span class="head-char">日</span>快樂生<span class="tail-char">日</span></div>
+        <div class="poem-line" id="p2-3"><span class="head-char">快</span>樂生日<span class="tail-char">快</span></div>
+        <div class="poem-line" id="p2-4"><span class="head-char">樂</span>生日快<span class="tail-char">樂</span></div>
+      </div>
+
+      <p style="margin-top: 15px; color: #a2d2ff; font-size: 1rem;">藏頭又藏尾，完美✨</p>
+      
+      <p style="margin-top: 30px; color: #ffd700; font-weight: bold; font-size: 1.1rem;">
+        20260724 By Laura | 蘿拉
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    /* 1. 背景流星雨 Canvas */
+    const canvas = document.getElementById('stars-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const stars = Array.from({ length: 250 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 2.2,
+      alpha: Math.random(),
+      speed: 0.01 + Math.random() * 0.03
+    }));
+
+    const meteors = Array.from({ length: 12 }, () => createMeteor());
+
+    function createMeteor() {
+      return {
+        x: Math.random() * width * 1.3,
+        y: Math.random() * -100,
+        length: 90 + Math.random() * 70,
+        speed: 5 + Math.random() * 6,
+        color: Math.random() > 0.5 ? '#8a2be2' : '#00bfff',
+        alpha: 0.6 + Math.random() * 0.4
+      };
+    }
+
+    function animateCanvas() {
+      ctx.clearRect(0, 0, width, height);
+      stars.forEach(star => {
+        star.alpha += star.speed;
+        if (star.alpha > 1 || star.alpha < 0) star.speed = -star.speed;
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      meteors.forEach((m, i) => {
+        m.x -= m.speed;
+        m.y += m.speed * 0.85;
+
+        const grad = ctx.createLinearGradient(m.x, m.y, m.x + m.length, m.y - m.length * 0.85);
+        grad.addColorStop(0, m.color);
+        grad.addColorStop(1, 'transparent');
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(m.x, m.y);
+        ctx.lineTo(m.x + m.length, m.y - m.length * 0.85);
+        ctx.stroke();
+
+        if (m.y > height || m.x < -m.length) {
+          meteors[i] = createMeteor();
+        }
+      });
+
+      requestAnimationFrame(animateCanvas);
+    }
+    animateCanvas();
+
+    /* 2. 音響控制邏輯 */
+    const audioPanther = document.getElementById('audioPanther');
+    const audioHaidilao = document.getElementById('audioHaidilao');
+
+    // 點擊「開啟銘亨的生日禮物」啟動體驗與播放頑皮豹
+    function startExperience() {
+      playPanther();
+      showSection('step1');
+    }
+
+    function playPanther() {
+      audioPanther.play().catch(e => console.log("播放失敗，請確認檔案路徑"));
+    }
+
+    function playHaidilao() {
+      audioPanther.pause();
+      audioPanther.currentTime = 0;
+      audioHaidilao.play().catch(e => console.log("播放失敗，請確認檔案路徑"));
+    }
+
+    /* 3. 倒計時 */
+    const targetDate = new Date("2026-07-24T00:00:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdown").innerHTML = "🎂 0天 0小時 0分 0秒 (生日到了！)";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown").innerHTML = 
+        `${days}天 ${hours}小時 ${minutes}分 ${seconds}秒`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    /* 4. 切換關卡 */
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function unlockCountdown() {
+      showSection('step-unlock');
+      let count = 3;
+      const timerElem = document.getElementById('unlock-timer');
+      
+      const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          timerElem.innerText = `倒計時 ${count} 秒`;
+        } else {
+          clearInterval(interval);
+          playHaidilao();
+          showSection('step2');
+        }
+      }, 1000);
+    }
+
+    function submitConfirm() {
+      const input = document.getElementById('userInput').value.trim();
+      if (input === '好的') {
+        showSection('step3');
+      } else {
+        alert("請輸入「好的」並點擊確認提交喔！");
+      }
+    }
+
+    function handleMood(type) {
+      if (type === 'happy') {
+        document.getElementById('sad-message').style.display = 'none';
+        const cakeArea = document.getElementById('cake-area');
+        cakeArea.style.display = 'flex';
+        
+        setTimeout(() => {
+          const c1 = document.getElementById('cake1');
+          c1.style.width = '180px'; c1.style.height = '45px'; c1.style.opacity = '1';
+        }, 200);
+
+        setTimeout(() => {
+          const c2 = document.getElementById('cake2');
+          c2.style.width = '130px'; c2.style.height = '40px'; c2.style.opacity = '1';
+        }, 700);
+
+        setTimeout(() => {
+          const c3 = document.getElementById('cake3');
+          c3.style.width = '80px'; c3.style.height = '35px'; c3.style.opacity = '1';
+        }, 1200);
+
+        setTimeout(() => {
+          document.getElementById('candle').style.opacity = '1';
+        }, 1700);
+
+        setTimeout(() => {
+          goToPoem();
+        }, 3200);
+
+      } else {
+        document.getElementById('cake-area').style.display = 'none';
+        document.getElementById('sad-message').style.display = 'block';
+      }
+    }
+
+    function goToPoem() {
+      showSection('step-poem1');
+      startPoem1Animation();
+    }
+
+    function startPoem1Animation() {
+      const lines = ['p1-1', 'p1-2', 'p1-3', 'p1-4'];
+      lines.forEach((id, index) => {
+        setTimeout(() => {
+          document.getElementById(id).classList.add('show');
+        }, index * 900);
+      });
+
+      setTimeout(() => {
+        ['char1', 'char2', 'char3', 'char4'].forEach(cls => {
+          const elem = document.querySelector('.' + cls);
+          if(elem) elem.classList.add('highlight-acrostic');
+        });
+        document.getElementById('p1-next-btn').style.display = 'inline-block';
+      }, lines.length * 900 + 400);
+    }
+
+    function goToPoem2() {
+      showSection('step-poem2');
+      startPoem2Animation();
+    }
+
+    function startPoem2Animation() {
+      const lines = ['p2-1', 'p2-2', 'p2-3', 'p2-4'];
+      lines.forEach((id, index) => {
+        setTimeout(() => {
+          document.getElementById(id).classList.add('show');
+        }, index * 900);
+      });
+
+      setTimeout(() => {
+        document.querySelectorAll('.head-char, .tail-char').forEach(elem => {
+          elem.classList.add('highlight-acrostic');
+        });
+      }, lines.length * 900 + 400);
+    }
+  </script>
 </body>
 </html>
